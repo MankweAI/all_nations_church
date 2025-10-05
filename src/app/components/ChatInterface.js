@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { content } from "@/assets/text/content.js";
 import VoiceNotePlayer from "./VoiceNotePlayer.js";
 
-// --- SVG Icon Components (no changes) ---
+// --- SVG Icon Components ---
 const MicIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@ const CameraIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth="2"
+      strokeWidth={2}
       d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
     />
   </svg>
@@ -135,7 +135,6 @@ export default function ChatInterface() {
     generateBotResponse(userInput);
   };
 
-  // ✅ THIS FUNCTION IS NOW COMPLETE AND CORRECT
   const generateBotResponse = (userInput) => {
     setTimeout(() => {
       let botResponse;
@@ -151,8 +150,23 @@ export default function ChatInterface() {
       } else if (conversationState === "awaiting_jesus_phone") {
         botResponse = content.acceptJesus.confirmation;
         newConversationState = "main_menu";
+      } else if (conversationState === "awaiting_testimony_choice") {
+        switch (userInput.toLowerCase()) {
+          case "1":
+            botResponse = content.responses.shareTestimonyNotAvailable;
+            newConversationState = "main_menu";
+            break;
+          case "2":
+            botResponse = content.responses.listenTestimonyAudio;
+            // This logic to send a second message needs to be handled differently
+            // For now, let's just set the state.
+            newConversationState = "listening_to_testimonies";
+            break;
+          default:
+            botResponse = content.responses.fallback;
+            break;
+        }
       } else {
-        // This switch statement now correctly handles all cases
         switch (userInput.toLowerCase()) {
           case "1":
             botResponse = content.responses.dailyBread;
@@ -169,10 +183,11 @@ export default function ChatInterface() {
             botResponse = content.responses.announcements;
             break;
           case "5":
-            botResponse = content.responses.testimonies;
+            botResponse = content.testimonyMenu;
+            newConversationState = "awaiting_testimony_choice";
             break;
           case "6":
-            botResponse = content.responses.support;
+            botResponse = content.responses.supportNotAvailable;
             break;
           case "7":
             botResponse = content.responses.inviteFriend;
@@ -194,6 +209,23 @@ export default function ChatInterface() {
         ...prev,
         { id: Date.now() + 1, content: botResponse, sender: "bot" },
       ]);
+
+      // Handle the second message for listening to testimonies
+      if (
+        newConversationState === "listening_to_testimonies" &&
+        userInput.toLowerCase() === "2"
+      ) {
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now() + 2,
+              content: content.responses.listenTestimonyNavigation,
+              sender: "bot",
+            },
+          ]);
+        }, 600);
+      }
     }, 700);
   };
 
@@ -237,6 +269,7 @@ export default function ChatInterface() {
 
   return (
     <div className="flex flex-col h-full w-full bg-transparent">
+      {/* ✅ HEADER RESTORED */}
       <header className="flex items-center p-2 bg-[#075E54] text-white shadow-md z-10">
         <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
         <div className="flex-grow">
@@ -249,6 +282,7 @@ export default function ChatInterface() {
           <MenuIcon />
         </div>
       </header>
+
       <main className="flex-grow p-4 overflow-y-auto chat-background flex flex-col space-y-2">
         {messages.map((message) => (
           <div
@@ -264,6 +298,8 @@ export default function ChatInterface() {
         ))}
         <div ref={messagesEndRef} />
       </main>
+
+      {/* ✅ FOOTER / TEXT-INPUT RESTORED */}
       <footer className="p-2 bg-transparent">
         <form className="flex items-center space-x-2" onSubmit={handleSubmit}>
           <div className="flex-grow flex items-center bg-white rounded-full px-4 py-2">

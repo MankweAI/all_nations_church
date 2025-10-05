@@ -125,18 +125,44 @@ export const content = {
   },
   podcastNotAvailable:
     "Thank you for your interest! This podcast episode is not yet available. Please check back soon.",
+  testimonyMenu: {
+    isMenu: true,
+    welcome: "What would you like to do?",
+    items: [
+      { id: 1, emoji: "1.", title: "Share a testimony", description: "" },
+      { id: 2, emoji: "2.", title: "Listen to testimonies", description: "" },
+    ],
+  },
+
   responses: {
     dailyBread: {
       type: "audio",
       url: "/assets/audio/dont_be_impatient.mp3",
       duration: "0:43",
     },
-    // ... other responses
+    announcements:
+      "📢 *Church Announcements*\n\n- Youth Night: Friday at 7 PM\n- Sunday Service: 9 AM & 11 AM\n\nWe can't wait to see you!",
+    shareTestimonyNotAvailable:
+      "Thank you for your heart to share! This function is not yet available, but will be coming soon.",
+    listenTestimonyAudio: {
+      type: "audio",
+      url: "/assets/audio/dont_be_impatient.mp3",
+      duration: "0:43",
+    },
+    listenTestimonyNavigation:
+      "You can type 'Next' to hear another testimony, or type 'Menu' to return to the main menu.",
+
+    // ✅ NEW: Placeholder for Support option
+    supportNotAvailable:
+      "Thank you for your willingness to support us! This feature is not yet available.",
+
+    inviteFriend:
+      "👋 *Invite a Friend*\n\nA personal invitation from our pastor is coming soon! For now, feel free to forward any message that has blessed you.",
+    help: "❓ *Help & Feedback*\n\nIf you have any issues or suggestions, please reply to this message and our team will get back to you.",
     fallback:
       "I'm sorry, I didn't quite understand that. 🤔\n\nPlease reply with a number (1-8) or type 'menu' to see the main options again.",
   },
 
-  // ✅ NEW: Content for the "Accept Jesus" multi-step flow
   acceptJesus: {
     askName:
       "This is a wonderful decision! We're so excited to walk with you. To start, could you please share your full name?",
