@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { content } from "@/assets/text/content.js";
 
-// --- SVG Icon Components for a cleaner look ---
+// --- SVG Icon Components ---
 const MicIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,6 @@ const SendIcon = () => (
   </svg>
 );
 
-// New Icon
 const EmojiIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +55,6 @@ const EmojiIcon = () => (
   </svg>
 );
 
-// New Icon
 const PaperclipIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +72,6 @@ const PaperclipIcon = () => (
   </svg>
 );
 
-// New Icon
 const CameraIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -99,13 +96,149 @@ const CameraIcon = () => (
 );
 
 export default function ChatInterface() {
+  // --- State Management ---
   const [messages, setMessages] = useState([
     { id: 1, content: content.mainMenu, sender: "bot" },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [conversationState, setConversationState] = useState({
+    stage: "main_menu",
+    userData: {},
+  });
+
+  // --- Ref for auto-scrolling ---
+  const messagesEndRef = useRef(null);
+
+  // --- Auto-scroll to bottom when messages change ---
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // --- Handle Form Submission ---
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Don't process empty messages
+    if (!inputValue.trim()) return;
+
+    // Create user message object
+    const userMessage = {
+      id: Date.now(),
+      content: inputValue,
+      sender: "user",
+    };
+
+    // Add user message to state
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+    // Store the input value before clearing
+    const userInput = inputValue.trim();
+
+    // Clear input field
+    setInputValue("");
+
+    // Generate bot response after a short delay
+    generateBotResponse(userInput);
+  };
+
+  // --- Generate Bot Response Logic ---
+  const generateBotResponse = (userInput) => {
+    // Simulate realistic typing delay
+    setTimeout(() => {
+      let botResponse = "";
+      let newConversationState = { ...conversationState };
+
+      // --- Handle Multi-Step Conversations ---
+      if (conversationState.stage === "accept_jesus_name") {
+        // Store the name
+        newConversationState.userData.name = userInput;
+        newConversationState.stage = "accept_jesus_phone";
+        botResponse = content.acceptJesus.askPhone;
+      } else if (conversationState.stage === "accept_jesus_phone") {
+        // Store the phone number
+        newConversationState.userData.phone = userInput;
+        newConversationState.stage = "main_menu";
+        // Personalized confirmation message
+        botResponse = content.acceptJesus.confirmation.replace(
+          "{name}",
+          newConversationState.userData.name || "friend"
+        );
+      }
+      // --- Handle Main Menu Options ---
+      else {
+        // Normalize input (trim and lowercase)
+        const normalizedInput = userInput.toLowerCase();
+
+        switch (normalizedInput) {
+          case "1":
+            botResponse = content.responses.dailyBites;
+            break;
+
+          case "2":
+            botResponse = content.responses.sermons;
+            break;
+
+          case "3":
+            // Start the "Accept Jesus" multi-step flow
+            newConversationState.stage = "accept_jesus_name";
+            newConversationState.userData = {};
+            botResponse = content.acceptJesus.askName;
+            break;
+
+          case "4":
+            botResponse = content.responses.announcements;
+            break;
+
+          case "5":
+            botResponse = content.responses.testimonies;
+            break;
+
+          case "6":
+            botResponse = content.responses.support;
+            break;
+
+          case "7":
+            botResponse = content.responses.inviteFriend;
+            break;
+
+          case "8":
+            botResponse = content.responses.help;
+            break;
+
+          case "0":
+          case "menu":
+          case "main menu":
+            // Return to main menu
+            botResponse = content.mainMenu;
+            newConversationState.stage = "main_menu";
+            newConversationState.userData = {};
+            break;
+
+          default:
+            // Unrecognized input
+            botResponse = content.responses.fallback;
+            break;
+        }
+      }
+
+      // Update conversation state
+      setConversationState(newConversationState);
+
+      // Create bot message object
+      const botMessage = {
+        id: Date.now(),
+        content: botResponse,
+        sender: "bot",
+      };
+
+      // Add bot message to state
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+    }, 700); // 700ms delay for realistic feel
+  };
 
   return (
     <div className="flex flex-col h-full w-full bg-transparent">
+      {/* Header */}
       <header className="flex items-center p-2 bg-[#075E54] text-white shadow-md z-10">
         <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
         <div className="flex-grow">
@@ -114,6 +247,7 @@ export default function ChatInterface() {
         </div>
       </header>
 
+      {/* Chat Messages Area */}
       <main className="flex-grow p-4 overflow-y-auto chat-background flex flex-col space-y-2">
         {messages.map((message) => (
           <div
@@ -124,37 +258,17 @@ export default function ChatInterface() {
                 : "bg-[#DCF8C6] self-end"
             }`}
           >
-            {message.content && message.content.isMenu ? (
-              <div>
-                <p className="text-sm whitespace-pre-wrap mb-3">
-                  {message.content.welcome}
-                </p>
-                <div className="space-y-2 border-t border-gray-100 pt-2">
-                  {message.content.items.map((item) => (
-                    <div key={item.id} className="flex items-start">
-                      <span className="mr-2">{item.emoji}</span>
-                      <div>
-                        <p className="font-semibold text-sm text-blue-600">
-                          {item.title}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-            )}
+            {/* Simplified rendering - all messages render the same way */}
+            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
           </div>
         ))}
+        {/* Invisible element to scroll to */}
+        <div ref={messagesEndRef} />
       </main>
 
-      {/* --- This is the new, improved footer --- */}
+      {/* Input Footer */}
       <footer className="p-2 bg-transparent">
-        <form className="flex items-center space-x-2">
+        <form className="flex items-center space-x-2" onSubmit={handleSubmit}>
           {/* Main input container */}
           <div className="flex-grow flex items-center bg-white rounded-full px-4 py-2">
             {/* Emoji Icon */}

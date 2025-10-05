@@ -1,59 +1,44 @@
 // src/assets/text/content.js
 
 export const content = {
-  mainMenu: {
-    isMenu: true, // A flag to identify this message as a menu
-    welcome:
-      "Welcome to the Main Menu!\n\nPlease reply with the number for your choice:",
-    items: [
-      {
-        id: 1,
-        emoji: "1️⃣",
-        title: "Daily Bites",
-        description: "(Access this week's key audio clips)",
-      },
-      {
-        id: 2,
-        emoji: "2️⃣",
-        title: "Sermons / Podcast",
-        description: "(Browse a list of recent messages)",
-      },
-      {
-        id: 3,
-        emoji: "3️⃣",
-        title: "I Want to Accept Jesus",
-        description: "(Take the next step in your faith journey)",
-      },
-      {
-        id: 4,
-        emoji: "4️⃣",
-        title: "Church Announcements",
-        description: "(See what's happening at church)",
-      },
-      {
-        id: 5,
-        emoji: "5️⃣",
-        title: "Testimonies",
-        description: "(Share your story or listen to others)",
-      },
-      {
-        id: 6,
-        emoji: "6️⃣",
-        title: "Support this Platform",
-        description: "(Help keep this daily service running)",
-      },
-      {
-        id: 7,
-        emoji: "7️⃣",
-        title: "Invite a Friend to Church",
-        description: "(Get a shareable video invitation from the Pastor)",
-      },
-      {
-        id: 8,
-        emoji: "8️⃣",
-        title: "Help & Feedback",
-        description: "(Contact us or share your thoughts)",
-      },
-    ],
+  mainMenu:
+    "Welcome to the Main Menu!\n\nPlease reply with the number for your choice:\n\n1️⃣ Daily Bites\n2️⃣ Sermons / Podcast\n3️⃣ I Want to Accept Jesus\n4️⃣ Church Announcements\n5️⃣ Testimonies\n6️⃣ Support this Platform\n7️⃣ Invite a Friend to Church\n8️⃣ Help & Feedback",
+
+  // --- Bot Response Messages ---
+  responses: {
+    dailyBites:
+      "🎧 *Daily Bites - This Week's Highlights*\n\nHere are the key audio clips from this week's sermon:\n\n1. The Power of Faith (2:15)\n2. Walking in Love (3:42)\n3. God's Grace (1:58)\n\n_Reply with the number to listen, or type '0' to return to the main menu._",
+
+    sermons:
+      '📖 *Recent Sermons & Podcasts*\n\nBrowse our latest messages:\n\n1. "Living with Purpose" - Oct 1, 2025\n2. "The Joy of Salvation" - Sept 24, 2025\n3. "Faith That Moves Mountains" - Sept 17, 2025\n\n_Reply with the number to listen, or type \'0\' to return to the main menu._',
+
+    announcements:
+      "📢 *Church Announcements*\n\n• *Youth Night* - Friday, Oct 8th at 7 PM\n• *Community Outreach* - Saturday, Oct 9th at 9 AM\n• *Sunday Service* - 9 AM & 11 AM\n\nWe can't wait to see you there!\n\n_Type '0' to return to the main menu._",
+
+    testimonies:
+      "✨ *Testimonies*\n\nYour story matters! We'd love to hear how God is working in your life.\n\n*To share your testimony:*\nSimply reply with your story, and we'll celebrate with you!\n\n*To read others' testimonies:*\nVisit our website at [church-website.com/testimonies]\n\n_Type '0' to return to the main menu._",
+
+    support:
+      "💝 *Support This Platform*\n\nYour generosity helps us continue providing daily encouragement to our community.\n\n*Ways to Give:*\n• Bank Transfer: Account 123-456-789\n• Mobile Money: 555-GIVE\n• In Person: See our finance team on Sunday\n\nThank you for your faithful support!\n\n_Type '0' to return to the main menu._",
+
+    inviteFriend:
+      "👋 *Invite a Friend to Church*\n\nShare this personal video invitation from Pastor [Name]:\n\n🎥 [Video link would appear here]\n\nOr copy this message:\n\"Hey! I'd love for you to join me at [Church Name] this Sunday. Service is at 9 AM. Hope to see you there!\"\n\n_Type '0' to return to the main menu._",
+
+    help: "❓ *Help & Feedback*\n\n*Need Help?*\nContact our team at:\n📧 Email: help@church.com\n📱 WhatsApp: +27 123 456 789\n\n*Have Feedback?*\nWe'd love to hear your thoughts! Reply to this message with your feedback.\n\n_Type '0' to return to the main menu._",
+
+    fallback:
+      "I'm sorry, I didn't quite understand that. 🤔\n\nPlease reply with a number (1-8) to make a selection, or type '0' to see the main menu again.",
+  },
+
+  // --- Multi-Step Conversation: Accept Jesus ---
+  acceptJesus: {
+    askName:
+      "🙏 *I Want to Accept Jesus*\n\nWe're so blessed that you've taken this step!\n\nTo help us support you on this journey, could you please share your *first name* with me?",
+
+    askPhone:
+      "Thank you! 😊\n\nCould you also share your *phone number* so one of our pastors can reach out to pray with you and answer any questions you might have?",
+
+    confirmation:
+      "🎉 *Praise God, {name}!*\n\nThis is a beautiful moment! One of our pastors will be in touch with you very soon.\n\nIn the meantime, here's a simple prayer you can pray:\n\n_\"Dear Jesus, I believe You are the Son of God. I believe You died for my sins and rose again. Please forgive me and come into my heart. I want to follow You all the days of my life. Amen.\"_\n\nWelcome to the family! ❤️\n\n_Type '0' to return to the main menu._",
   },
 };
