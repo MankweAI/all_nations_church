@@ -4,25 +4,25 @@ export const content = {
   mainMenu: {
     isMenu: true,
     welcome:
-      "Welcome to the Main Menu!\n\nPlease reply with the number for your choice:",
+      "Welcome to All Nations Church Midrand!\n\nPlease reply with the number for your choice:",
     items: [
       {
         id: 1,
         emoji: "1. 🎙️",
-        title: "Daily Bites",
-        description: "(Access this week's key audio clips)",
+        title: " Daily Encouragement",
+        description: " (Get today's Manna)",
       },
       {
         id: 2,
         emoji: "2. 🎧",
         title: "Podcast",
-        description: "(Browse our latest podcast series)",
+        description: "(Browse our latest episodes)",
       },
       {
         id: 3,
         emoji: "3. 🙏",
         title: "I Want to Accept Jesus",
-        description: "(Take the next step in your faith journey)",
+        description: "(Your life will never be the same!)",
       },
       {
         id: 4,
@@ -34,12 +34,12 @@ export const content = {
         id: 5,
         emoji: "5. ✨",
         title: "Testimonies",
-        description: "(Share your story or listen to others)",
+        description: "(Share testimony or get encouraged)",
       },
       {
         id: 6,
         emoji: "6. ❤️",
-        title: "Support this Platform",
+        title: "Offering Basket",
         description: "(Help keep this daily service running)",
       },
       // ✅ RENAMED Option 7
@@ -53,7 +53,7 @@ export const content = {
         id: 8,
         emoji: "8. ❓",
         title: "Help & Feedback",
-        description: "(Contact us or share your thoughts)",
+        description: "",
       },
     ],
   },
@@ -170,6 +170,6 @@ export const content = {
     askPhone:
       "Thank you, {name}. What is the best contact number for one of our pastors to reach out to you?",
     confirmation:
-      "Thank you! A member of our pastoral team will be in touch shortly to pray with you and welcome you to the family.\n\nIf you need to speak to someone immediately, you can reach the church office at:\n📞 011-123-4567\n\nWelcome home! ❤️",
+      "Thank you! A member of our pastoral team will be in touch shortly to pray with you and welcome you to the family.\n\nIf you need to speak to someone immediately, you can reach the church office at:\n📞 +27 71 683 1849\n\nWelcome home! ❤️",
   },
 };
