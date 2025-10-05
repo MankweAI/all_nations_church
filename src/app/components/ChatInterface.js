@@ -140,7 +140,8 @@ export default function ChatInterface() {
       let newConversationState = conversationState;
 
       if (conversationState === "awaiting_podcast_selection") {
-        botResponse = content.responses.podcastNotAvailable;
+        // ✅ FIX: Changed to correct content path
+        botResponse = content.podcastNotAvailable;
         newConversationState = "main_menu";
       } else if (conversationState === "accept_jesus_name") {
         newConversationState = "accept_jesus_phone";
@@ -156,9 +157,9 @@ export default function ChatInterface() {
           case "1":
             botResponse = content.responses.dailyBread;
             break;
-          // ✅ THIS IS THE FIX: Changed from content.responses.sermons to content.responses.podcastList
           case "2":
-            botResponse = content.responses.podcastList;
+            // ✅ FIX: Changed to correct content path
+            botResponse = content.podcastList;
             newConversationState = "awaiting_podcast_selection";
             break;
           case "3":
