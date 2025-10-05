@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { content } from "@/assets/text/content.js";
 import VoiceNotePlayer from "./VoiceNotePlayer.js";
 
-// --- SVG Icon Components ---
+// --- SVG Icon Components (keep all existing icons) ---
 const MicIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +172,7 @@ export default function ChatInterface() {
 
         switch (normalizedInput) {
           case "1":
-            botResponse = content.responses.dailyBites;
+            botResponse = content.responses.dailyBread; // ✅ FIXED: Changed from dailyBites
             break;
 
           case "2":
@@ -240,8 +240,6 @@ export default function ChatInterface() {
   return (
     <div className="flex flex-col h-full w-full bg-transparent">
       {/* Header */}
-    <div className="flex flex-col h-full w-full bg-transparent">
-      {/* Header - keep as is */}
       <header className="flex items-center p-2 bg-[#075E54] text-white shadow-md z-10">
         <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
         <div className="flex-grow">
@@ -322,7 +320,6 @@ export default function ChatInterface() {
           </button>
         </form>
       </footer>
-          </div>
     </div>
   );
 }
