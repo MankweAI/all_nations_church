@@ -4,7 +4,7 @@ export const content = {
   mainMenu: {
     isMenu: true,
     welcome:
-      "Welcome to All Nations Church Midrand!\n\nPlease reply with the number for your choice:",
+      "Welcome to Every Nations Church Midrand!\n\nPlease reply with the number for your choice:",
     items: [
       {
         id: 1,
