@@ -2,12 +2,16 @@
 
 export const content = {
   mainMenu:
-    "Welcome to the Main Menu!\n\nPlease reply with the number for your choice:\n\n1️⃣ Daily Bites\n2️⃣ Sermons / Podcast\n3️⃣ I Want to Accept Jesus\n4️⃣ Church Announcements\n5️⃣ Testimonies\n6️⃣ Support this Platform\n7️⃣ Invite a Friend to Church\n8️⃣ Help & Feedback",
+    "Welcome! 🙏\n\nChoose an option by replying with the number:\n\n1️⃣ Daily Bread\n2️⃣ Sermons / Podcast\n3️⃣ I Want to Accept Jesus\n4️⃣ Church Announcements\n5️⃣ Testimonies\n6️⃣ Support this Platform\n7️⃣ Invite a Friend\n8️⃣ Help & Feedback\n\n_Reply with a number to get started_",
 
   // --- Bot Response Messages ---
   responses: {
-    dailyBites:
-      "🎧 *Daily Bites - This Week's Highlights*\n\nHere are the key audio clips from this week's sermon:\n\n1. The Power of Faith (2:15)\n2. Walking in Love (3:42)\n3. God's Grace (1:58)\n\n_Reply with the number to listen, or type '0' to return to the main menu._",
+    dailyBread: {
+      type: "audio",
+      url: "/assets/audio/don't_be_impatient.mp3",
+      title: "Don't Be Impatient",
+      duration: "2:15",
+    },
 
     sermons:
       '📖 *Recent Sermons & Podcasts*\n\nBrowse our latest messages:\n\n1. "Living with Purpose" - Oct 1, 2025\n2. "The Joy of Salvation" - Sept 24, 2025\n3. "Faith That Moves Mountains" - Sept 17, 2025\n\n_Reply with the number to listen, or type \'0\' to return to the main menu._',
@@ -22,7 +26,7 @@ export const content = {
       "💝 *Support This Platform*\n\nYour generosity helps us continue providing daily encouragement to our community.\n\n*Ways to Give:*\n• Bank Transfer: Account 123-456-789\n• Mobile Money: 555-GIVE\n• In Person: See our finance team on Sunday\n\nThank you for your faithful support!\n\n_Type '0' to return to the main menu._",
 
     inviteFriend:
-      "👋 *Invite a Friend to Church*\n\nShare this personal video invitation from Pastor [Name]:\n\n🎥 [Video link would appear here]\n\nOr copy this message:\n\"Hey! I'd love for you to join me at [Church Name] this Sunday. Service is at 9 AM. Hope to see you there!\"\n\n_Type '0' to return to the main menu._",
+      "👋 *Invite a Friend*\n\nShare this personal video invitation from Pastor [Name]:\n\n🎥 [Video link would appear here]\n\nOr copy this message:\n\"Hey! I'd love for you to join me at [Church Name] this Sunday. Service is at 9 AM. Hope to see you there!\"\n\n_Type '0' to return to the main menu._",
 
     help: "❓ *Help & Feedback*\n\n*Need Help?*\nContact our team at:\n📧 Email: help@church.com\n📱 WhatsApp: +27 123 456 789\n\n*Have Feedback?*\nWe'd love to hear your thoughts! Reply to this message with your feedback.\n\n_Type '0' to return to the main menu._",
 

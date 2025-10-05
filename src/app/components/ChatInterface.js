@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { content } from "@/assets/text/content.js";
+import VoiceNotePlayer from "./VoiceNotePlayer.js";
 
 // --- SVG Icon Components ---
 const MicIcon = () => (
@@ -239,6 +240,8 @@ export default function ChatInterface() {
   return (
     <div className="flex flex-col h-full w-full bg-transparent">
       {/* Header */}
+    <div className="flex flex-col h-full w-full bg-transparent">
+      {/* Header - keep as is */}
       <header className="flex items-center p-2 bg-[#075E54] text-white shadow-md z-10">
         <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
         <div className="flex-grow">
@@ -258,8 +261,15 @@ export default function ChatInterface() {
                 : "bg-[#DCF8C6] self-end"
             }`}
           >
-            {/* Simplified rendering - all messages render the same way */}
-            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+            {/* Check if message is audio type */}
+            {message.content?.type === "audio" ? (
+              <VoiceNotePlayer
+                audioUrl={message.content.url}
+                duration={message.content.duration}
+              />
+            ) : (
+              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+            )}
           </div>
         ))}
         {/* Invisible element to scroll to */}
@@ -312,6 +322,7 @@ export default function ChatInterface() {
           </button>
         </form>
       </footer>
+          </div>
     </div>
   );
 }
