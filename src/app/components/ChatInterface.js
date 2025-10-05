@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { content } from "@/assets/text/content.js";
 import VoiceNotePlayer from "./VoiceNotePlayer.js";
 
-// --- SVG Icon Components (No changes needed here) ---
+// --- SVG Icon Components ---
 const MicIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -91,6 +91,26 @@ const CameraIcon = () => (
     />
   </svg>
 );
+const VideoIcon = () => (
+  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+    <path
+      fillRule="evenodd"
+      d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+const PhoneIcon = () => (
+  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+  </svg>
+);
+const MenuIcon = () => (
+  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+  </svg>
+);
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState([
@@ -107,10 +127,8 @@ export default function ChatInterface() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
-
     const userMessage = { id: Date.now(), content: inputValue, sender: "user" };
     setMessages((prev) => [...prev, userMessage]);
-
     const userInput = inputValue.trim();
     setInputValue("");
     generateBotResponse(userInput);
@@ -119,7 +137,53 @@ export default function ChatInterface() {
   const generateBotResponse = (userInput) => {
     setTimeout(() => {
       let botResponse;
-      // ... (rest of the function remains the same)
+      let newConversationState = conversationState;
+      if (conversationState === "accept_jesus_name") {
+        newConversationState = "accept_jesus_phone";
+        botResponse = content.acceptJesus.askPhone;
+      } else if (conversationState === "accept_jesus_phone") {
+        newConversationState = "main_menu";
+        botResponse = content.acceptJesus.confirmation.replace(
+          "{name}",
+          userInput
+        );
+      } else {
+        switch (userInput.toLowerCase()) {
+          case "1":
+            botResponse = content.responses.dailyBread;
+            break;
+          case "2":
+            botResponse = content.responses.sermons;
+            break;
+          case "3":
+            newConversationState = "accept_jesus_name";
+            botResponse = content.acceptJesus.askName;
+            break;
+          case "4":
+            botResponse = content.responses.announcements;
+            break;
+          case "5":
+            botResponse = content.responses.testimonies;
+            break;
+          case "6":
+            botResponse = content.responses.support;
+            break;
+          case "7":
+            botResponse = content.responses.inviteFriend;
+            break;
+          case "8":
+            botResponse = content.responses.help;
+            break;
+          case "0":
+          case "menu":
+            botResponse = content.mainMenu;
+            break;
+          default:
+            botResponse = content.responses.fallback;
+            break;
+        }
+      }
+      setConversationState(newConversationState);
       setMessages((prev) => [
         ...prev,
         { id: Date.now() + 1, content: botResponse, sender: "bot" },
@@ -127,7 +191,6 @@ export default function ChatInterface() {
     }, 700);
   };
 
-  // ✅ BUG FIX 1: This function correctly handles different content types, ensuring the audio player is rendered.
   const renderMessageContent = (message) => {
     const { content } = message;
 
@@ -146,7 +209,6 @@ export default function ChatInterface() {
           <div className="space-y-2 border-t border-gray-100 pt-2">
             {content.items.map((item) => (
               <div key={item.id} className="flex items-start">
-                {/* ✅ BUG FIX 2: Added dark text color to the emoji/number span */}
                 <span className="mr-2 font-medium text-gray-700">
                   {item.emoji}
                 </span>
@@ -162,16 +224,26 @@ export default function ChatInterface() {
         </div>
       );
     }
-
     return (
-      <p className="text-sm whitespace-pre-wrap text-gray-800">{content}</p>
+      <p className="text-sm whitespace-pre-wrap text-gray-800">
+        {String(content)}
+      </p>
     );
   };
 
   return (
     <div className="flex flex-col h-full w-full bg-transparent">
       <header className="flex items-center p-2 bg-[#075E54] text-white shadow-md z-10">
-        {/* ...header content... */}
+        <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
+        <div className="flex-grow">
+          <h1 className="font-semibold">[Church Name]</h1>
+          <p className="text-xs text-gray-200">online</p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <VideoIcon />
+          <PhoneIcon />
+          <MenuIcon />
+        </div>
       </header>
 
       <main className="flex-grow p-4 overflow-y-auto chat-background flex flex-col space-y-2">
@@ -180,9 +252,9 @@ export default function ChatInterface() {
             key={message.id}
             className={`max-w-xs rounded-lg shadow-sm ${
               message.sender === "bot"
-                ? "bg-white self-start p-3"
-                : "bg-[#DCF8C6] self-end p-2"
-            }`}
+                ? "bg-white self-start"
+                : "bg-[#DCF8C6] self-end"
+            } ${message.content?.type === "audio" ? "p-0" : "p-3"}`}
           >
             {renderMessageContent(message)}
           </div>
