@@ -1,14 +1,14 @@
 /* src/app/globals.css */
 
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
+@import "tailwindcss";
 
 body {
   background-color: #DADADA;
-  color: white; /* This makes the default text color white */
+  color: white;
 }
 
 .chat-background {
-  background-image: url('../assets/images/chat_background.png');
+  /* This path is now correct because it's relative to the `public` folder */
+  background-image: url('/assets/images/chat_background.png');
   background-color: #E5DDD5;
 }

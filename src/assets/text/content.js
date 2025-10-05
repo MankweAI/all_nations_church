@@ -1,13 +1,68 @@
 // src/assets/text/content.js
 
 export const content = {
-  mainMenu:
-    "Welcome! 🙏\n\nChoose an option by replying with the number:\n\n1️⃣ Daily Bread\n2️⃣ Sermons / Podcast\n3️⃣ I Want to Accept Jesus\n4️⃣ Church Announcements\n5️⃣ Testimonies\n6️⃣ Support this Platform\n7️⃣ Invite a Friend\n8️⃣ Help & Feedback\n\n_Reply with a number to get started_",
+  mainMenu: {
+    isMenu: true,
+    welcome:
+      "Welcome to the Main Menu!\n\nPlease reply with the number for your choice:",
+    items: [
+      // ✅ FIX: Numbers have been added back next to the emojis.
+      {
+        id: 1,
+        emoji: "1. 🎙️",
+        title: "Daily Bites",
+        description: "(Access this week's key audio clips)",
+      },
+      {
+        id: 2,
+        emoji: "2. 📚",
+        title: "Sermons / Podcast",
+        description: "(Browse a list of recent messages)",
+      },
+      {
+        id: 3,
+        emoji: "3. 🙏",
+        title: "I Want to Accept Jesus",
+        description: "(Take the next step in your faith journey)",
+      },
+      {
+        id: 4,
+        emoji: "4. 📢",
+        title: "Church Announcements",
+        description: "(See what's happening at church)",
+      },
+      {
+        id: 5,
+        emoji: "5. ✨",
+        title: "Testimonies",
+        description: "(Share your story or listen to others)",
+      },
+      {
+        id: 6,
+        emoji: "6. ❤️",
+        title: "Support this Platform",
+        description: "(Help keep this daily service running)",
+      },
+      {
+        id: 7,
+        emoji: "7. 👋",
+        title: "Invite a Friend to Church",
+        description: "(Get a shareable video invitation)",
+      },
+      {
+        id: 8,
+        emoji: "8. ❓",
+        title: "Help & Feedback",
+        description: "(Contact us or share your thoughts)",
+      },
+    ],
+  },
 
   // --- Bot Response Messages ---
   responses: {
     dailyBread: {
       type: "audio",
+      // ✅ THIS IS THE FIX: The apostrophe has been removed from the filename.
       url: "/assets/audio/dont_be_impatient.mp3",
       title: "Don't Be Impatient",
       duration: "2:15",
