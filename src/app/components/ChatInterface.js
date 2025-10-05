@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { content } from "@/assets/text/content.js";
 import VoiceNotePlayer from "./VoiceNotePlayer.js";
 
-// --- SVG Icon Components ---
+// --- SVG Icon Components (no changes) ---
 const MicIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +138,11 @@ export default function ChatInterface() {
     setTimeout(() => {
       let botResponse;
       let newConversationState = conversationState;
-      if (conversationState === "accept_jesus_name") {
+
+      if (conversationState === "awaiting_podcast_selection") {
+        botResponse = content.responses.podcastNotAvailable;
+        newConversationState = "main_menu";
+      } else if (conversationState === "accept_jesus_name") {
         newConversationState = "accept_jesus_phone";
         botResponse = content.acceptJesus.askPhone;
       } else if (conversationState === "accept_jesus_phone") {
@@ -152,8 +156,10 @@ export default function ChatInterface() {
           case "1":
             botResponse = content.responses.dailyBread;
             break;
+          // ✅ THIS IS THE FIX: Changed from content.responses.sermons to content.responses.podcastList
           case "2":
-            botResponse = content.responses.sermons;
+            botResponse = content.responses.podcastList;
+            newConversationState = "awaiting_podcast_selection";
             break;
           case "3":
             newConversationState = "accept_jesus_name";
@@ -193,13 +199,11 @@ export default function ChatInterface() {
 
   const renderMessageContent = (message) => {
     const { content } = message;
-
     if (content?.type === "audio") {
       return (
         <VoiceNotePlayer audioUrl={content.url} duration={content.duration} />
       );
     }
-
     if (content?.isMenu) {
       return (
         <div>
@@ -245,7 +249,6 @@ export default function ChatInterface() {
           <MenuIcon />
         </div>
       </header>
-
       <main className="flex-grow p-4 overflow-y-auto chat-background flex flex-col space-y-2">
         {messages.map((message) => (
           <div
@@ -261,7 +264,6 @@ export default function ChatInterface() {
         ))}
         <div ref={messagesEndRef} />
       </main>
-
       <footer className="p-2 bg-transparent">
         <form className="flex items-center space-x-2" onSubmit={handleSubmit}>
           <div className="flex-grow flex items-center bg-white rounded-full px-4 py-2">

@@ -89,6 +89,78 @@ export const content = {
       "I'm sorry, I didn't quite understand that. 🤔\n\nPlease reply with a number (1-8) to make a selection, or type '0' to see the main menu again.",
   },
 
+  podcastList: {
+    isMenu: true,
+    welcome:
+      "Here are our latest podcast episodes. Reply with a number to select one:",
+    items: [
+      {
+        id: 1,
+        emoji: "1.",
+        title: "Faith in the Modern Age",
+        description: "Navigating belief in a fast-paced world.",
+      },
+      {
+        id: 2,
+        emoji: "2.",
+        title: "The Parables, Unpacked",
+        description: "Finding new meaning in old stories.",
+      },
+      {
+        id: 3,
+        emoji: "3.",
+        title: "Purpose Driven Mornings",
+        description: "Starting your day with intention.",
+      },
+      {
+        id: 4,
+        emoji: "4.",
+        title: "Anxious for Nothing",
+        description: "A series on finding peace in chaos.",
+      },
+      {
+        id: 5,
+        emoji: "5.",
+        title: "Parenting with Grace",
+        description: "Raising a family in faith.",
+      },
+      {
+        id: 6,
+        emoji: "6.",
+        title: "Leadership Lessons from Nehemiah",
+        description: "Building with a vision.",
+      },
+      {
+        id: 7,
+        emoji: "7.",
+        title: "The Book of Romans: Part I",
+        description: "A deep dive into the foundational text.",
+      },
+      {
+        id: 8,
+        emoji: "8.",
+        title: "Conversations on Forgiveness",
+        description: "Interviews on letting go.",
+      },
+      {
+        id: 9,
+        emoji: "9.",
+        title: "Money & Meaning",
+        description: "A biblical view on finances.",
+      },
+      {
+        id: 10,
+        emoji: "10.",
+        title: "Sunday Sermon Rewind",
+        description: "Highlights from this week's message.",
+      },
+    ],
+  },
+
+  // ✅ NEW: Placeholder response for podcast selection
+  podcastNotAvailable:
+    "Thank you for your interest! This podcast episode is not yet available. Please check back soon.",
+
   // --- Multi-Step Conversation: Accept Jesus ---
   acceptJesus: {
     askName:
