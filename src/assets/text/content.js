@@ -8,7 +8,7 @@ export const content = {
   responses: {
     dailyBread: {
       type: "audio",
-      url: "/assets/audio/don't_be_impatient.mp3",
+      url: "/assets/audio/dont_be_impatient.mp3",
       title: "Don't Be Impatient",
       duration: "2:15",
     },
