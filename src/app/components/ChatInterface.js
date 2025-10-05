@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { content } from "@/assets/text/content.js";
 import VoiceNotePlayer from "./VoiceNotePlayer.js";
 
-// --- SVG Icon Components (no changes) ---
+// --- SVG Icon Components ---
 const MicIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -118,6 +118,7 @@ export default function ChatInterface() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [conversationState, setConversationState] = useState("main_menu");
+  const [userName, setUserName] = useState("");
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -140,47 +141,43 @@ export default function ChatInterface() {
       let newConversationState = conversationState;
 
       if (conversationState === "awaiting_podcast_selection") {
-        // ✅ FIX: Changed to correct content path
         botResponse = content.podcastNotAvailable;
         newConversationState = "main_menu";
-      } else if (conversationState === "accept_jesus_name") {
-        newConversationState = "accept_jesus_phone";
-        botResponse = content.acceptJesus.askPhone;
-      } else if (conversationState === "accept_jesus_phone") {
+      } else if (conversationState === "awaiting_jesus_name") {
+        setUserName(userInput);
+        botResponse = content.acceptJesus.askPhone.replace("{name}", userInput);
+        newConversationState = "awaiting_jesus_phone";
+      } else if (conversationState === "awaiting_jesus_phone") {
+        botResponse = content.acceptJesus.confirmation;
         newConversationState = "main_menu";
-        botResponse = content.acceptJesus.confirmation.replace(
-          "{name}",
-          userInput
-        );
       } else {
         switch (userInput.toLowerCase()) {
           case "1":
             botResponse = content.responses.dailyBread;
             break;
           case "2":
-            // ✅ FIX: Changed to correct content path
             botResponse = content.podcastList;
             newConversationState = "awaiting_podcast_selection";
             break;
           case "3":
-            newConversationState = "accept_jesus_name";
             botResponse = content.acceptJesus.askName;
+            newConversationState = "awaiting_jesus_name";
             break;
           case "4":
             botResponse = content.responses.announcements;
-            break;
+            break; // Placeholder
           case "5":
             botResponse = content.responses.testimonies;
-            break;
+            break; // Placeholder
           case "6":
             botResponse = content.responses.support;
-            break;
+            break; // Placeholder
           case "7":
             botResponse = content.responses.inviteFriend;
-            break;
+            break; // Placeholder
           case "8":
             botResponse = content.responses.help;
-            break;
+            break; // Placeholder
           case "0":
           case "menu":
             botResponse = content.mainMenu;
@@ -200,11 +197,13 @@ export default function ChatInterface() {
 
   const renderMessageContent = (message) => {
     const { content } = message;
+
     if (content?.type === "audio") {
       return (
         <VoiceNotePlayer audioUrl={content.url} duration={content.duration} />
       );
     }
+
     if (content?.isMenu) {
       return (
         <div>
@@ -238,18 +237,20 @@ export default function ChatInterface() {
 
   return (
     <div className="flex flex-col h-full w-full bg-transparent">
+      {/* ✅ HEADER RESTORED */}
       <header className="flex items-center p-2 bg-[#075E54] text-white shadow-md z-10">
         <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
         <div className="flex-grow">
           <h1 className="font-semibold">[Church Name]</h1>
           <p className="text-xs text-gray-200">online</p>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 text-white">
           <VideoIcon />
           <PhoneIcon />
           <MenuIcon />
         </div>
       </header>
+
       <main className="flex-grow p-4 overflow-y-auto chat-background flex flex-col space-y-2">
         {messages.map((message) => (
           <div
@@ -265,6 +266,8 @@ export default function ChatInterface() {
         ))}
         <div ref={messagesEndRef} />
       </main>
+
+      {/* ✅ FOOTER / TEXT-INPUT RESTORED */}
       <footer className="p-2 bg-transparent">
         <form className="flex items-center space-x-2" onSubmit={handleSubmit}>
           <div className="flex-grow flex items-center bg-white rounded-full px-4 py-2">
