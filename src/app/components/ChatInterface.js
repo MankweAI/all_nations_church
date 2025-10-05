@@ -190,7 +190,7 @@ export default function ChatInterface() {
             botResponse = content.responses.supportNotAvailable;
             break;
           case "7":
-            botResponse = content.responses.inviteFriend;
+            botResponse = content.responses.prayerRequest;
             break;
           case "8":
             botResponse = content.responses.help;

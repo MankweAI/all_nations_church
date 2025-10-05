@@ -42,11 +42,12 @@ export const content = {
         title: "Support this Platform",
         description: "(Help keep this daily service running)",
       },
+      // ✅ RENAMED Option 7
       {
         id: 7,
-        emoji: "7. 👋",
-        title: "Invite a Friend to Church",
-        description: "(Get a shareable video invitation)",
+        emoji: "7. 🙌",
+        title: "Send Prayer Request",
+        description: "(Let us stand with you in prayer)",
       },
       {
         id: 8,
@@ -151,13 +152,13 @@ export const content = {
     },
     listenTestimonyNavigation:
       "You can type 'Next' to hear another testimony, or type 'Menu' to return to the main menu.",
-
-    // ✅ NEW: Placeholder for Support option
     supportNotAvailable:
       "Thank you for your willingness to support us! This feature is not yet available.",
 
-    inviteFriend:
-      "👋 *Invite a Friend*\n\nA personal invitation from our pastor is coming soon! For now, feel free to forward any message that has blessed you.",
+    // ✅ NEW: Placeholder for Prayer Request
+    prayerRequest:
+      "🙌 *Prayer Request*\n\nPlease send your prayer request as a text or a voice note. Our church leadership receives these and will be standing with you in prayer. Be assured that your request is held in confidence.",
+
     help: "❓ *Help & Feedback*\n\nIf you have any issues or suggestions, please reply to this message and our team will get back to you.",
     fallback:
       "I'm sorry, I didn't quite understand that. 🤔\n\nPlease reply with a number (1-8) or type 'menu' to see the main options again.",
