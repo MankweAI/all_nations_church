@@ -332,7 +332,7 @@ export default function ChatInterface() {
           />
         </div>
         <div className="flex-grow">
-          <h1 className="font-semibold">Every Nations Midrand</h1>
+          <h1 className="font-semibold">Every Nation Midrand</h1>
           <p className="text-xs text-gray-200">online</p>
         </div>
         <div className="flex items-center space-x-4 text-white">
