@@ -115,7 +115,6 @@ const MenuIcon = () => (
   </svg>
 );
 
-// --- Helper Function for Date Formatting ---
 const formatDate = (date) => {
   const today = new Date();
   const yesterday = new Date(today);
@@ -135,7 +134,7 @@ export default function ChatInterface() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [conversationState, setConversationState] = useState("main_menu");
-  const [userName, setUserName] = useState("");
+  const [mentorshipData, setMentorshipData] = useState({});
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -166,76 +165,195 @@ export default function ChatInterface() {
     generateBotResponse(userInput, userMessage.id);
   };
 
+  const addBotMessage = (botResponse) => {
+    const botMessage = {
+      id: Date.now() + Math.random(),
+      content: botResponse,
+      sender: "bot",
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, botMessage]);
+  };
+
   const generateBotResponse = (userInput, userMessageId) => {
     setIsTyping(true);
+
     setTimeout(() => {
       let botResponse;
       let newConversationState = conversationState;
-      let additionalResponse;
 
-      if (conversationState === "awaiting_podcast_selection") {
-        botResponse = content.podcastNotAvailable;
+      const mentorshipFlow = content.mentorshipFlow;
+      const eCommerceFlow = content.ecommerceFlow;
+
+      if (userInput.toLowerCase() === "menu") {
+        botResponse = content.mainMenu;
         newConversationState = "main_menu";
-      } else if (conversationState === "awaiting_jesus_name") {
-        setUserName(userInput);
-        botResponse = content.acceptJesus.askPhone.replace("{name}", userInput);
-        newConversationState = "awaiting_jesus_phone";
-      } else if (conversationState === "awaiting_jesus_phone") {
-        botResponse = content.acceptJesus.confirmation;
-        newConversationState = "main_menu";
-      } else if (conversationState === "awaiting_testimony_choice") {
-        switch (userInput.toLowerCase()) {
-          case "1":
-            botResponse = content.responses.shareTestimonyNotAvailable;
+        setMentorshipData({});
+      } else {
+        switch (conversationState) {
+          case "main_menu":
+            switch (userInput) {
+              case "1":
+                botResponse = mentorshipFlow.step1_welcome;
+                newConversationState = "mentorship_step1_start";
+                break;
+              case "2":
+                botResponse = eCommerceFlow.step1_welcome;
+                newConversationState = "ecommerce_step1_choice";
+                break;
+              case "3":
+                botResponse = content.askMeAnything.placeholder;
+                newConversationState = "main_menu";
+                break;
+              case "4":
+                botResponse = content.plugsLink;
+                newConversationState = "main_menu";
+                break;
+              case "5":
+                botResponse = content.urgentQueries.menu;
+                newConversationState = "awaiting_urgent_query_choice";
+                break;
+              default:
+                botResponse = content.fallback;
+                break;
+            }
+            break;
+
+          // --- E-commerce Flow ---
+          case "ecommerce_step1_choice":
+            if (userInput === "1" || userInput === "2") {
+              botResponse = eCommerceFlow.step2_vip_prompt;
+              newConversationState = "ecommerce_step2_capture";
+            } else if (userInput === "3") {
+              botResponse = eCommerceFlow.step2_gift_prompt;
+              newConversationState = "ecommerce_step2_capture";
+            } else {
+              botResponse = content.fallback;
+            }
+            break;
+
+          case "ecommerce_step2_capture":
+            const name = userInput.split(" ")[0]; // Simple name extraction
+            botResponse = eCommerceFlow.step3_confirmation(name);
+            addBotMessage(botResponse);
+            botResponse = eCommerceFlow.step3_storeLink;
             newConversationState = "main_menu";
             break;
-          case "2":
-            botResponse = content.responses.listenTestimonyAudio;
-            additionalResponse = content.responses.listenTestimonyNavigation;
-            newConversationState = "listening_to_testimonies";
+
+          // --- Mentorship Flow ---
+          case "mentorship_step1_start":
+            if (userInput === "1") {
+              botResponse = mentorshipFlow.step2_triage;
+              newConversationState = "mentorship_step2_triage";
+            } else if (userInput === "2") {
+              botResponse = mentorshipFlow.step1_priceInfo;
+              addBotMessage(botResponse);
+              botResponse = mentorshipFlow.step2_triage;
+              newConversationState = "mentorship_step2_triage";
+            } else {
+              botResponse = content.fallback;
+            }
             break;
+
+          case "mentorship_step2_triage":
+            const stageChoice = mentorshipFlow.step2_triage.items.find(
+              (i) => i.id.toString() === userInput
+            )?.title;
+            if (stageChoice) {
+              setMentorshipData({ ...mentorshipData, stage: stageChoice });
+              if (userInput === "1") {
+                botResponse = mentorshipFlow.step3_idea_askIdea;
+                newConversationState = "mentorship_step3_idea_details";
+              } else if (userInput === "2") {
+                botResponse = mentorshipFlow.step3_existing_askName;
+                newConversationState = "mentorship_step3_existing_details";
+              } else {
+                botResponse = mentorshipFlow.step4_askChallenge;
+                newConversationState = "mentorship_step4_challenge";
+                setMentorshipData({
+                  ...mentorshipData,
+                  stage: stageChoice,
+                  details: "N/A",
+                  location: "N/A",
+                  competitors: "N/A",
+                });
+              }
+            } else {
+              botResponse = content.fallback;
+            }
+            break;
+
+          case "mentorship_step3_idea_details":
+            setMentorshipData({ ...mentorshipData, details: userInput });
+            botResponse = mentorshipFlow.step3_idea_askLocation;
+            newConversationState = "mentorship_step3_idea_location";
+            break;
+          case "mentorship_step3_idea_location":
+            setMentorshipData({ ...mentorshipData, location: userInput });
+            botResponse = mentorshipFlow.step3_idea_askCompetitors;
+            newConversationState = "mentorship_step3_idea_competitors";
+            break;
+          case "mentorship_step3_idea_competitors":
+            setMentorshipData({ ...mentorshipData, competitors: userInput });
+            botResponse = mentorshipFlow.step4_askChallenge;
+            newConversationState = "mentorship_step4_challenge";
+            break;
+
+          case "mentorship_step3_existing_details":
+            setMentorshipData({ ...mentorshipData, details: userInput });
+            botResponse = mentorshipFlow.step3_existing_askLocation;
+            newConversationState = "mentorship_step3_existing_location";
+            break;
+          case "mentorship_step3_existing_location":
+            setMentorshipData({ ...mentorshipData, location: userInput });
+            botResponse = mentorshipFlow.step3_existing_askCompetitors;
+            newConversationState = "mentorship_step3_existing_competitors";
+            break;
+          case "mentorship_step3_existing_competitors":
+            setMentorshipData({ ...mentorshipData, competitors: userInput });
+            botResponse = mentorshipFlow.step4_askChallenge;
+            newConversationState = "mentorship_step4_challenge";
+            break;
+
+          case "mentorship_step4_challenge":
+            const challengeChoice =
+              mentorshipFlow.step4_askChallenge.items.find(
+                (i) => i.id.toString() === userInput
+              )?.title;
+            if (challengeChoice) {
+              setMentorshipData({
+                ...mentorshipData,
+                challenge: challengeChoice,
+              });
+              botResponse = mentorshipFlow.step5_askGoal;
+              newConversationState = "mentorship_step5_goal";
+            } else {
+              botResponse = content.fallback;
+            }
+            break;
+
+          case "mentorship_step5_goal":
+            const finalData = { ...mentorshipData, goal: userInput };
+            setMentorshipData(finalData);
+            botResponse = mentorshipFlow.step6_summary(finalData);
+            addBotMessage(botResponse);
+            botResponse = mentorshipFlow.step6_handOff;
+            newConversationState = "main_menu";
+            setMentorshipData({});
+            break;
+
+          case "awaiting_urgent_query_choice":
+            botResponse = content.urgentQueries.placeholder;
+            newConversationState = "main_menu";
+            break;
+
           default:
-            botResponse = content.responses.fallback;
-            break;
-        }
-      } else {
-        switch (userInput.toLowerCase()) {
-          case "1":
-            botResponse = content.responses.dailyBread;
-            break;
-          case "2":
-            botResponse = content.podcastList;
-            newConversationState = "awaiting_podcast_selection";
-            break;
-          case "3":
-            botResponse = content.acceptJesus.askName;
-            newConversationState = "awaiting_jesus_name";
-            break;
-          case "4":
-            botResponse = content.responses.announcements;
-            break;
-          case "5":
-            botResponse = content.testimonyMenu;
-            newConversationState = "awaiting_testimony_choice";
-            break;
-          case "6":
-            botResponse = content.responses.supportNotAvailable;
-            break;
-          case "7":
-            botResponse = content.responses.prayerRequest;
-            break;
-          case "8":
-            botResponse = content.responses.help;
-            break;
-          case "0":
-          case "menu":
-            botResponse = content.mainMenu;
-            break;
-          default:
-            botResponse = content.responses.fallback;
+            botResponse = content.fallback;
+            newConversationState = "main_menu";
             break;
         }
       }
+
       setIsTyping(false);
       setConversationState(newConversationState);
       setMessages((prev) =>
@@ -243,40 +361,28 @@ export default function ChatInterface() {
           msg.id === userMessageId ? { ...msg, status: "read" } : msg
         )
       );
-      const botMessage = {
-        id: Date.now() + 1,
-        content: botResponse,
-        sender: "bot",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, botMessage]);
-
-      if (additionalResponse) {
-        setTimeout(() => {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now() + 2,
-              content: additionalResponse,
-              sender: "bot",
-              timestamp: new Date(),
-            },
-          ]);
-        }, 600);
-      }
+      addBotMessage(botResponse);
     }, 1200);
   };
 
   const getPlaceholderText = () => {
     switch (conversationState) {
-      case "awaiting_jesus_name":
-        return "Enter your full name...";
-      case "awaiting_jesus_phone":
-        return "Enter your contact number...";
-      case "awaiting_podcast_selection":
-        return "Enter a number (1-10)...";
-      case "awaiting_testimony_choice":
-        return "Enter 1 or 2...";
+      case "ecommerce_step2_capture":
+        return "Enter your name and email...";
+      case "mentorship_step3_idea_details":
+        return "Describe your idea...";
+      case "mentorship_step3_idea_location":
+        return "e.g., Sandton, Gauteng";
+      case "mentorship_step3_idea_competitors":
+        return "e.g., Competitor A, Competitor B";
+      case "mentorship_step3_existing_details":
+        return "Business name and website...";
+      case "mentorship_step3_existing_location":
+        return "e.g., Online nationwide";
+      case "mentorship_step3_existing_competitors":
+        return "e.g., Competitor A, Competitor B";
+      case "mentorship_step5_goal":
+        return "What would a perfect outcome look like?";
       default:
         return "Message";
     }
@@ -299,13 +405,15 @@ export default function ChatInterface() {
             {content.items.map((item) => (
               <div key={item.id} className="flex items-start">
                 <span className="mr-2 font-medium text-gray-700">
-                  {item.emoji}
+                  {item.emoji || `${item.id}.`}
                 </span>
                 <div>
                   <p className="font-semibold text-sm text-blue-600">
                     {item.title}
                   </p>
-                  <p className="text-xs text-gray-500">{item.description}</p>
+                  {item.description && (
+                    <p className="text-xs text-gray-500">{item.description}</p>
+                  )}
                 </div>
               </div>
             ))}
@@ -325,14 +433,14 @@ export default function ChatInterface() {
       <header className="flex items-center p-2 bg-[#075E54] text-white shadow-md z-10">
         <div className="w-10 h-10 rounded-full bg-gray-300 mr-3 overflow-hidden relative">
           <Image
-            src="/assets/images/profile-pic.png"
-            alt="Church Profile Picture"
+            src="/assets/images/coach_bx_profile.png"
+            alt="Coach BX Profile Picture"
             layout="fill"
             objectFit="cover"
           />
         </div>
         <div className="flex-grow">
-          <h1 className="font-semibold">Every Nation Midrand</h1>
+          <h1 className="font-semibold">Coach BX</h1>
           <p className="text-xs text-gray-200">online</p>
         </div>
         <div className="flex items-center space-x-4 text-white">

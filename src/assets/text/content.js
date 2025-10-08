@@ -4,172 +4,143 @@ export const content = {
   mainMenu: {
     isMenu: true,
     welcome:
-      "Welcome to Every Nation Church Midrand!\n\nPlease reply with the number for your choice:",
-    items: [
-      {
-        id: 1,
-        emoji: "1. 🎙️",
-        title: " Daily Encouragement",
-        description: " (Get today's Manna)",
-      },
-      {
-        id: 2,
-        emoji: "2. 🎧",
-        title: "Podcast",
-        description: "(Browse our latest episodes)",
-      },
-      {
-        id: 3,
-        emoji: "3. 🙏",
-        title: "I Want to Accept Jesus",
-        description: "(Your life will never be the same!)",
-      },
-      {
-        id: 4,
-        emoji: "4. 📢",
-        title: "Church Announcements",
-        description: "(See what's happening at church)",
-      },
-      {
-        id: 5,
-        emoji: "5. ✨",
-        title: "Testimonies",
-        description: "(Share testimony or get encouraged)",
-      },
-      {
-        id: 6,
-        emoji: "6. ❤️",
-        title: "Offering Basket",
-        description: "(Help keep this daily service running)",
-      },
-      // ✅ RENAMED Option 7
-      {
-        id: 7,
-        emoji: "7. 🙌",
-        title: "Send Prayer Request",
-        description: "(Let us stand with you in prayer)",
-      },
-      {
-        id: 8,
-        emoji: "8. ❓",
-        title: "Help & Feedback",
-        description: "",
-      },
-    ],
-  },
-  podcastList: {
-    isMenu: true,
-    welcome:
-      "Here are our latest podcast episodes. Reply with a number to select one:",
+      "Welcome to Coach BX's personal assistant! How can I help you today?",
     items: [
       {
         id: 1,
         emoji: "1.",
-        title: "Faith in the Modern Age",
-        description: "Navigating belief in a fast-paced world.",
+        title: "Book a 1 hour Mentorship Session",
+        description: "",
       },
       {
         id: 2,
         emoji: "2.",
-        title: "The Parables, Unpacked",
-        description: "Finding new meaning in old stories.",
+        title: "Buy our Custom Wine, Gin & Vodka",
+        description: "",
       },
       {
         id: 3,
         emoji: "3.",
-        title: "Purpose Driven Mornings",
-        description: "Starting your day with intention.",
+        title: "Ask Me Anything",
+        description: "",
       },
       {
         id: 4,
         emoji: "4.",
-        title: "Anxious for Nothing",
-        description: "A series on finding peace in chaos.",
+        title: "All the plugs",
+        description: "(Business tips from the coach)",
       },
       {
         id: 5,
         emoji: "5.",
-        title: "Parenting with Grace",
-        description: "Raising a family in faith.",
-      },
-      {
-        id: 6,
-        emoji: "6.",
-        title: "Leadership Lessons from Nehemiah",
-        description: "Building with a vision.",
-      },
-      {
-        id: 7,
-        emoji: "7.",
-        title: "The Book of Romans: Part I",
-        description: "A deep dive into the foundational text.",
-      },
-      {
-        id: 8,
-        emoji: "8.",
-        title: "Conversations on Forgiveness",
-        description: "Interviews on letting go.",
-      },
-      {
-        id: 9,
-        emoji: "9.",
-        title: "Money & Meaning",
-        description: "A biblical view on finances.",
-      },
-      {
-        id: 10,
-        emoji: "10.",
-        title: "Sunday Sermon Rewind",
-        description: "Highlights from this week's message.",
+        title: "Urgent Queries",
+        description: "",
       },
     ],
   },
-  podcastNotAvailable:
-    "Thank you for your interest! This podcast episode is not yet available. Please check back soon.",
-  testimonyMenu: {
-    isMenu: true,
-    welcome: "What would you like to do?",
-    items: [
-      { id: 1, emoji: "1.", title: "Share a testimony", description: "" },
-      { id: 2, emoji: "2.", title: "Listen to testimonies", description: "" },
-    ],
-  },
-
-  responses: {
-    dailyBread: {
-      type: "audio",
-      url: "/assets/audio/dont_be_impatient.mp3",
-      duration: "0:43",
+  mentorshipFlow: {
+    step1_welcome: {
+      isMenu: true,
+      welcome:
+        "Awesome! A 1-hour power session can genuinely change the direction of your business. I just need to ask a few quick questions to prepare for our call.",
+      items: [
+        { id: 1, title: "Yes, let's do it!" },
+        { id: 2, title: "What is the price? R" },
+      ],
     },
-    announcements:
-      "📢 *Church Announcements*\n\n- Youth Night: Friday at 7 PM\n- Sunday Service: 9 AM & 11 AM\n\nWe can't wait to see you!",
-    shareTestimonyNotAvailable:
-      "Thank you for your heart to share! This function is not yet available, but will be coming soon.",
-    listenTestimonyAudio: {
-      type: "audio",
-      url: "/assets/audio/dont_be_impatient.mp3",
-      duration: "0:43",
+    step1_priceInfo:
+      "The investment for a 60-minute power session is R1500. This includes a recording of the call and a summary of your key action steps.",
+    step2_triage: {
+      isMenu: true,
+      welcome: "First, which of these best describes your current stage?",
+      items: [
+        {
+          id: 1,
+          emoji: "1. 💡",
+          title: "I have an idea/capital, but haven't started",
+        },
+        {
+          id: 2,
+          emoji: "2. 🏪",
+          title: "I have an existing business (product/service)",
+        },
+        {
+          id: 3,
+          emoji: "3. ✨",
+          title: "I'm building a personal brand/influencer",
+        },
+        { id: 4, emoji: "4. 🤔", title: "Something else" },
+      ],
     },
-    listenTestimonyNavigation:
-      "You can type 'Next' to hear another testimony, or type 'Menu' to return to the main menu.",
-    supportNotAvailable:
-      "Thank you for your willingness to support us! This feature is not yet available.",
-
-    // ✅ NEW: Placeholder for Prayer Request
-    prayerRequest:
-      "🙌 *Prayer Request*\n\nPlease send your prayer request as a text or a voice note. Our church leadership receives these and will be standing with you in prayer. Be assured that your request is held in confidence.",
-
-    help: "❓ *Help & Feedback*\n\nIf you have any issues or suggestions, please reply to this message and our team will get back to you.",
-    fallback:
-      "I'm sorry, I didn't quite understand that. 🤔\n\nPlease reply with a number (1-8) or type 'menu' to see the main options again.",
+    step3_idea_askIdea:
+      "Great, the idea phase is exciting! In one sentence, what is your business idea or industry?",
+    step3_idea_askLocation:
+      "Got it. And where are you based? (e.g., Sandton, Gauteng)",
+    step3_idea_askCompetitors:
+      "Have you identified any potential competitors yet? If so, who are they?",
+    step3_existing_askName:
+      "Excellent. What is your business name and website/social media link?",
+    step3_existing_askLocation:
+      "And where is your business primarily located? (e.g., A specific shop in Durban, services across Gauteng, or online nationwide)",
+    step3_existing_askCompetitors: "Who are your 1-2 main local competitors?",
+    step4_askChallenge: {
+      isMenu: true,
+      welcome: "What is your single biggest business challenge right now?",
+      items: [
+        { id: 1, title: "Getting new customers / Marketing" },
+        { id: 2, title: "Increasing my sales & profit" },
+        { id: 3, title: "Business strategy & planning" },
+        { id: 4, title: "Building my brand / Social media" },
+        { id: 5, title: "Managing my finances / Cash flow" },
+        { id: 6, title: "Other" },
+      ],
+    },
+    step5_askGoal:
+      "Perfect. And to make this the most valuable hour for you, what would a 'perfect' outcome from this session look like?",
+    step6_summary: (data) =>
+      `Fantastic, thank you. Here is a summary of your details:\n\n*Business Stage:* ${data.stage}\n*Details:* ${data.details}\n*Location:* ${data.location}\n*Competitors:* ${data.competitors}\n*Challenge:* ${data.challenge}\n*Goal:* ${data.goal}\n\nIf that all looks correct, you can go ahead and book your session below!`,
+    step6_handOff:
+      "➡️ Secure Your Session & Book Now ⬅️\n(This would link to a booking page)",
   },
-
-  acceptJesus: {
-    askName:
-      "This is a wonderful decision! We're so excited to walk with you. To start, could you please share your full name?",
-    askPhone:
-      "Thank you, {name}. What is the best contact number for one of our pastors to reach out to you?",
-    confirmation:
-      "Thank you! A member of our pastoral team will be in touch shortly to pray with you and welcome you to the family.\n\nIf you need to speak to someone immediately, you can reach the church office at:\n📞 +27 71 683 1849\n\nWelcome home! ❤️",
+  ecommerceFlow: {
+    step1_welcome: {
+      isMenu: true,
+      welcome:
+        "Great! Our store has some fantastic custom items. What are you interested in?",
+      items: [
+        { id: 1, emoji: "1. 🍷", title: "Wine" },
+        { id: 2, emoji: "2. 🍸", title: "Gin & Vodka" },
+        { id: 3, emoji: "3. 🎁", title: "Customized Gift" },
+      ],
+    },
+    step2_vip_prompt:
+      "Excellent choice! To add you to our VIP list for exclusive offers, what is your name and email address?",
+    step2_gift_prompt:
+      "Perfect for bespoke branding or bulk orders. So our team can get in touch, what is your name and email address?",
+    step3_confirmation: (name) =>
+      `Thank you, ${name}! We've got your details. You can visit our online store right now by clicking the link below.`,
+    step3_storeLink:
+      "➡️ Visit the Phantom VI Online Store ⬅️\nhttps://phantomvi.online/",
   },
+  askMeAnything: {
+    placeholder: "This feature is not active.",
+  },
+  plugsLink:
+    "Here are all the business tips from Coach BX:\n\nwww.businessplugs.co.za",
+  urgentQueries: {
+    menu: {
+      isMenu: true,
+      welcome: "Please select your urgent query:",
+      items: [
+        { id: 1, title: "Technical issue with a paid session" },
+        { id: 2, title: "Time-sensitive media/PR opportunity" },
+        { id: 3, title: "A major, sudden business crisis" },
+        { id: 4, title: "My issue is something else" },
+      ],
+    },
+    placeholder:
+      "Thank you for reaching out through the Urgent Queries channel. Please note, this automated feature is still under development for our MVP launch and is not yet active. For any truly urgent matters, please send a detailed email directly to support@coachbx.co.za. For all other inquiries, please type 'menu'.",
+  },
+  fallback:
+    "I'm sorry, I didn't quite understand that. 🤔\n\nPlease reply with a number (1-5) or type 'menu' to see the main options again.",
 };
