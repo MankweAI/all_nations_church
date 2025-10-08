@@ -175,198 +175,220 @@ export default function ChatInterface() {
     setMessages((prev) => [...prev, botMessage]);
   };
 
-  const generateBotResponse = (userInput, userMessageId) => {
+  const generateBotResponse = async (userInput, userMessageId) => {
     setIsTyping(true);
+    let botResponse;
+    let newConversationState = conversationState;
 
-    setTimeout(() => {
-      let botResponse;
-      let newConversationState = conversationState;
+    const mentorshipFlow = content.mentorshipFlow;
+    const eCommerceFlow = content.ecommerceFlow;
 
-      const mentorshipFlow = content.mentorshipFlow;
-      const eCommerceFlow = content.ecommerceFlow;
-
-      if (userInput.toLowerCase() === "menu") {
-        botResponse = content.mainMenu;
-        newConversationState = "main_menu";
-        setMentorshipData({});
-      } else {
-        switch (conversationState) {
-          case "main_menu":
-            switch (userInput) {
-              case "1":
-                botResponse = mentorshipFlow.step1_welcome;
-                newConversationState = "mentorship_step1_start";
-                break;
-              case "2":
-                botResponse = eCommerceFlow.step1_welcome;
-                newConversationState = "ecommerce_step1_choice";
-                break;
-              case "3":
-                botResponse = content.askMeAnything.placeholder;
-                newConversationState = "main_menu";
-                break;
-              case "4":
-                botResponse = content.plugsLink;
-                newConversationState = "main_menu";
-                break;
-              case "5":
-                botResponse = content.urgentQueries.menu;
-                newConversationState = "awaiting_urgent_query_choice";
-                break;
-              default:
-                botResponse = content.fallback;
-                break;
-            }
-            break;
-
-          // --- E-commerce Flow ---
-          case "ecommerce_step1_choice":
-            if (userInput === "1" || userInput === "2") {
-              botResponse = eCommerceFlow.step2_vip_prompt;
-              newConversationState = "ecommerce_step2_capture";
-            } else if (userInput === "3") {
-              botResponse = eCommerceFlow.step2_gift_prompt;
-              newConversationState = "ecommerce_step2_capture";
-            } else {
+    if (userInput.toLowerCase() === "menu") {
+      botResponse = content.mainMenu;
+      newConversationState = "main_menu";
+      setMentorshipData({});
+    } else {
+      switch (conversationState) {
+        case "main_menu":
+          switch (userInput) {
+            case "1":
+              botResponse = mentorshipFlow.step1_welcome;
+              newConversationState = "mentorship_step1_start";
+              break;
+            case "2":
+              botResponse = eCommerceFlow.step1_welcome;
+              newConversationState = "ecommerce_step1_choice";
+              break;
+            case "3":
+              botResponse = content.askMeAnything.prompt;
+              newConversationState = "awaiting_question";
+              break;
+            case "4":
+              botResponse = content.plugsLink;
+              newConversationState = "main_menu";
+              break;
+            case "5":
+              botResponse = content.urgentQueries.menu;
+              newConversationState = "awaiting_urgent_query_choice";
+              break;
+            default:
               botResponse = content.fallback;
-            }
-            break;
+              break;
+          }
+          break;
 
-          case "ecommerce_step2_capture":
-            const name = userInput.split(" ")[0]; // Simple name extraction
-            botResponse = eCommerceFlow.step3_confirmation(name);
+        case "awaiting_question":
+          let question = userInput;
+          const choice = parseInt(userInput);
+          if (
+            !isNaN(choice) &&
+            choice >= 1 &&
+            choice <= content.askMeAnything.prompt.items.length
+          ) {
+            question = content.askMeAnything.prompt.items[choice - 1].title;
+          }
+
+          try {
+            const response = await fetch("/api/ask", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ question }),
+            });
+            if (!response.ok) throw new Error("API request failed");
+            const data = await response.json();
+            botResponse = data.answer;
+          } catch (error) {
+            botResponse = content.askMeAnything.error;
+          }
+          newConversationState = "main_menu";
+          break;
+
+        case "ecommerce_step1_choice":
+          if (userInput === "1" || userInput === "2") {
+            botResponse = eCommerceFlow.step2_vip_prompt;
+            newConversationState = "ecommerce_step2_capture";
+          } else if (userInput === "3") {
+            botResponse = eCommerceFlow.step2_gift_prompt;
+            newConversationState = "ecommerce_step2_capture";
+          } else {
+            botResponse = content.fallback;
+          }
+          break;
+
+        case "ecommerce_step2_capture":
+          const name = userInput.split(" ")[0];
+          botResponse = eCommerceFlow.step3_confirmation(name);
+          addBotMessage(botResponse);
+          botResponse = eCommerceFlow.step3_storeLink;
+          newConversationState = "main_menu";
+          break;
+
+        case "mentorship_step1_start":
+          if (userInput === "1") {
+            botResponse = mentorshipFlow.step2_triage;
+            newConversationState = "mentorship_step2_triage";
+          } else if (userInput === "2") {
+            botResponse = mentorshipFlow.step1_priceInfo;
             addBotMessage(botResponse);
-            botResponse = eCommerceFlow.step3_storeLink;
-            newConversationState = "main_menu";
-            break;
+            botResponse = mentorshipFlow.step2_triage;
+            newConversationState = "mentorship_step2_triage";
+          } else {
+            botResponse = content.fallback;
+          }
+          break;
 
-          // --- Mentorship Flow ---
-          case "mentorship_step1_start":
-            if (userInput === "1") {
-              botResponse = mentorshipFlow.step2_triage;
-              newConversationState = "mentorship_step2_triage";
-            } else if (userInput === "2") {
-              botResponse = mentorshipFlow.step1_priceInfo;
-              addBotMessage(botResponse);
-              botResponse = mentorshipFlow.step2_triage;
-              newConversationState = "mentorship_step2_triage";
+        case "mentorship_step2_triage":
+          const stageChoice = mentorshipFlow.step2_triage.items.find(
+            (i) => i.id.toString() === userInput
+          )?.title;
+          if (stageChoice) {
+            setMentorshipData({ ...mentorshipData, stage: stageChoice });
+            if (userInput === "1" || userInput === "2") {
+              const flowType = userInput === "1" ? "idea" : "existing";
+              botResponse =
+                mentorshipFlow[`step3_${flowType}_askIdea`] ||
+                mentorshipFlow[`step3_${flowType}_askName`];
+              newConversationState = `mentorship_step3_${flowType}_details`;
             } else {
-              botResponse = content.fallback;
-            }
-            break;
-
-          case "mentorship_step2_triage":
-            const stageChoice = mentorshipFlow.step2_triage.items.find(
-              (i) => i.id.toString() === userInput
-            )?.title;
-            if (stageChoice) {
-              setMentorshipData({ ...mentorshipData, stage: stageChoice });
-              if (userInput === "1") {
-                botResponse = mentorshipFlow.step3_idea_askIdea;
-                newConversationState = "mentorship_step3_idea_details";
-              } else if (userInput === "2") {
-                botResponse = mentorshipFlow.step3_existing_askName;
-                newConversationState = "mentorship_step3_existing_details";
-              } else {
-                botResponse = mentorshipFlow.step4_askChallenge;
-                newConversationState = "mentorship_step4_challenge";
-                setMentorshipData({
-                  ...mentorshipData,
-                  stage: stageChoice,
-                  details: "N/A",
-                  location: "N/A",
-                  competitors: "N/A",
-                });
-              }
-            } else {
-              botResponse = content.fallback;
-            }
-            break;
-
-          case "mentorship_step3_idea_details":
-            setMentorshipData({ ...mentorshipData, details: userInput });
-            botResponse = mentorshipFlow.step3_idea_askLocation;
-            newConversationState = "mentorship_step3_idea_location";
-            break;
-          case "mentorship_step3_idea_location":
-            setMentorshipData({ ...mentorshipData, location: userInput });
-            botResponse = mentorshipFlow.step3_idea_askCompetitors;
-            newConversationState = "mentorship_step3_idea_competitors";
-            break;
-          case "mentorship_step3_idea_competitors":
-            setMentorshipData({ ...mentorshipData, competitors: userInput });
-            botResponse = mentorshipFlow.step4_askChallenge;
-            newConversationState = "mentorship_step4_challenge";
-            break;
-
-          case "mentorship_step3_existing_details":
-            setMentorshipData({ ...mentorshipData, details: userInput });
-            botResponse = mentorshipFlow.step3_existing_askLocation;
-            newConversationState = "mentorship_step3_existing_location";
-            break;
-          case "mentorship_step3_existing_location":
-            setMentorshipData({ ...mentorshipData, location: userInput });
-            botResponse = mentorshipFlow.step3_existing_askCompetitors;
-            newConversationState = "mentorship_step3_existing_competitors";
-            break;
-          case "mentorship_step3_existing_competitors":
-            setMentorshipData({ ...mentorshipData, competitors: userInput });
-            botResponse = mentorshipFlow.step4_askChallenge;
-            newConversationState = "mentorship_step4_challenge";
-            break;
-
-          case "mentorship_step4_challenge":
-            const challengeChoice =
-              mentorshipFlow.step4_askChallenge.items.find(
-                (i) => i.id.toString() === userInput
-              )?.title;
-            if (challengeChoice) {
+              botResponse = mentorshipFlow.step4_askChallenge;
+              newConversationState = "mentorship_step4_challenge";
               setMentorshipData({
                 ...mentorshipData,
-                challenge: challengeChoice,
+                stage: stageChoice,
+                details: "N/A",
+                location: "N/A",
+                competitors: "N/A",
               });
-              botResponse = mentorshipFlow.step5_askGoal;
-              newConversationState = "mentorship_step5_goal";
-            } else {
-              botResponse = content.fallback;
             }
-            break;
-
-          case "mentorship_step5_goal":
-            const finalData = { ...mentorshipData, goal: userInput };
-            setMentorshipData(finalData);
-            botResponse = mentorshipFlow.step6_summary(finalData);
-            addBotMessage(botResponse);
-            botResponse = mentorshipFlow.step6_handOff;
-            newConversationState = "main_menu";
-            setMentorshipData({});
-            break;
-
-          case "awaiting_urgent_query_choice":
-            botResponse = content.urgentQueries.placeholder;
-            newConversationState = "main_menu";
-            break;
-
-          default:
+          } else {
             botResponse = content.fallback;
-            newConversationState = "main_menu";
-            break;
-        }
-      }
+          }
+          break;
 
-      setIsTyping(false);
-      setConversationState(newConversationState);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === userMessageId ? { ...msg, status: "read" } : msg
-        )
-      );
-      addBotMessage(botResponse);
-    }, 1200);
+        case "mentorship_step3_idea_details":
+          setMentorshipData({ ...mentorshipData, details: userInput });
+          botResponse = mentorshipFlow.step3_idea_askLocation;
+          newConversationState = "mentorship_step3_idea_location";
+          break;
+        case "mentorship_step3_idea_location":
+          setMentorshipData({ ...mentorshipData, location: userInput });
+          botResponse = mentorshipFlow.step3_idea_askCompetitors;
+          newConversationState = "mentorship_step3_idea_competitors";
+          break;
+        case "mentorship_step3_idea_competitors":
+          setMentorshipData({ ...mentorshipData, competitors: userInput });
+          botResponse = mentorshipFlow.step4_askChallenge;
+          newConversationState = "mentorship_step4_challenge";
+          break;
+
+        case "mentorship_step3_existing_details":
+          setMentorshipData({ ...mentorshipData, details: userInput });
+          botResponse = mentorshipFlow.step3_existing_askLocation;
+          newConversationState = "mentorship_step3_existing_location";
+          break;
+        case "mentorship_step3_existing_location":
+          setMentorshipData({ ...mentorshipData, location: userInput });
+          botResponse = mentorshipFlow.step3_existing_askCompetitors;
+          newConversationState = "mentorship_step3_existing_competitors";
+          break;
+        case "mentorship_step3_existing_competitors":
+          setMentorshipData({ ...mentorshipData, competitors: userInput });
+          botResponse = mentorshipFlow.step4_askChallenge;
+          newConversationState = "mentorship_step4_challenge";
+          break;
+
+        case "mentorship_step4_challenge":
+          const challengeChoice = mentorshipFlow.step4_askChallenge.items.find(
+            (i) => i.id.toString() === userInput
+          )?.title;
+          if (challengeChoice) {
+            setMentorshipData({
+              ...mentorshipData,
+              challenge: challengeChoice,
+            });
+            botResponse = mentorshipFlow.step5_askGoal;
+            newConversationState = "mentorship_step5_goal";
+          } else {
+            botResponse = content.fallback;
+          }
+          break;
+
+        case "mentorship_step5_goal":
+          const finalData = { ...mentorshipData, goal: userInput };
+          setMentorshipData(finalData);
+          botResponse = mentorshipFlow.step6_summary(finalData);
+          addBotMessage(botResponse);
+          botResponse = mentorshipFlow.step6_handOff;
+          newConversationState = "main_menu";
+          setMentorshipData({});
+          break;
+
+        case "awaiting_urgent_query_choice":
+          botResponse = content.urgentQueries.placeholder;
+          newConversationState = "main_menu";
+          break;
+
+        default:
+          botResponse = content.fallback;
+          newConversationState = "main_menu";
+          break;
+      }
+    }
+
+    setIsTyping(false);
+    setConversationState(newConversationState);
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === userMessageId ? { ...msg, status: "read" } : msg
+      )
+    );
+    if (botResponse) addBotMessage(botResponse);
   };
 
   const getPlaceholderText = () => {
     switch (conversationState) {
+      case "awaiting_question":
+        return "Ask a question or select a topic...";
       case "ecommerce_step2_capture":
         return "Enter your name and email...";
       case "mentorship_step3_idea_details":

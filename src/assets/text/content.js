@@ -123,7 +123,26 @@ export const content = {
       "➡️ Visit the Phantom VI Online Store ⬅️\nhttps://phantomvi.online/",
   },
   askMeAnything: {
-    placeholder: "This feature is not active.",
+    prompt: {
+      isMenu: true,
+      welcome:
+        "I'm connected to the Coach BX knowledge base. Please select a topic or type your own question below.",
+      items: [
+        { id: 1, title: "Kasi Businesses Today" },
+        { id: 2, title: "White-Labelling Products (Health, Beauty, etc.)" },
+        { id: 3, title: "The Vending Machine Business" },
+        { id: 4, title: "Starting a Wi-Fi Reseller Business" },
+        { id: 5, title: "Businesses to Start Under R1,000" },
+        { id: 6, title: "Businesses to Start Under R5,000" },
+        { id: 7, title: "Funding Opportunities in SA" },
+        { id: 8, title: "Registering a Business (Pty Ltd vs Sole Proprietor)" },
+        { id: 9, title: "SARS & Tax Basics for Small Business" },
+        { id: 10, title: "Social Media Marketing Tips" },
+        { id: 11, title: "How to Bid for Government Tenders" },
+      ],
+    },
+    error:
+      "Sorry, I had trouble connecting to my knowledge base. Please try again in a moment.",
   },
   plugsLink:
     "Here are all the business tips from Coach BX:\n\nwww.businessplugs.co.za",
@@ -142,5 +161,5 @@ export const content = {
       "Thank you for reaching out through the Urgent Queries channel. Please note, this automated feature is still under development for our MVP launch and is not yet active. For any truly urgent matters, please send a detailed email directly to support@coachbx.co.za. For all other inquiries, please type 'menu'.",
   },
   fallback:
-    "I'm sorry, I didn't quite understand that. 🤔\n\nPlease reply with a number (1-5) or type 'menu' to see the main options again.",
+    "I'm sorry, I didn't quite understand that. 🤔\n\nPlease type 'menu' to see the main options again.",
 };
