@@ -8,31 +8,31 @@ export const content = {
     items: [
       {
         id: 1,
-        emoji: "1.",
+        emoji: "1. 🗓️",
         title: "Book a 1 hour Mentorship Session",
         description: "",
       },
       {
         id: 2,
-        emoji: "2.",
+        emoji: "2. 🍾",
         title: "Buy our Custom Wine, Gin & Vodka",
         description: "",
       },
       {
         id: 3,
-        emoji: "3.",
+        emoji: "3. 🧠",
         title: "Ask Me Anything",
         description: "",
       },
       {
         id: 4,
-        emoji: "4.",
+        emoji: "4. 🔌",
         title: "All the plugs",
         description: "(Business tips from the coach)",
       },
       {
         id: 5,
-        emoji: "5.",
+        emoji: "5. 🚨",
         title: "Urgent Queries",
         description: "",
       },
@@ -159,6 +159,12 @@ export const content = {
     },
     placeholder:
       "Thank you for reaching out through the Urgent Queries channel. Please note, this automated feature is still under development for our MVP launch and is not yet active. For any truly urgent matters, please send a detailed email directly to support@coachbx.co.za. For all other inquiries, please type 'menu'.",
+  },
+  goodbye: "You're welcome! Feel free to reach out anytime. Cheers!",
+  backToMenu: {
+    isMenu: true,
+    welcome: "Would you like to return to the main menu?",
+    items: [{ id: 1, title: "Yes, back to Main Menu" }],
   },
   fallback:
     "I'm sorry, I didn't quite understand that. 🤔\n\nPlease type 'menu' to see the main options again.",

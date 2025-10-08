@@ -7,6 +7,32 @@ import MessageStatus from "./MessageStatus.js";
 import React from "react";
 import Image from "next/image";
 
+// --- Helper component to find and create links ---
+const Linkify = ({ children }) => {
+  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+  const parts = children.split(urlRegex);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        urlRegex.test(part) ? (
+          <a
+            key={i}
+            href={part.startsWith("www.") ? `http://${part}` : part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            {part}
+          </a>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+};
+
 // --- SVG Icon Components ---
 const MicIcon = () => (
   <svg
@@ -182,11 +208,18 @@ export default function ChatInterface() {
 
     const mentorshipFlow = content.mentorshipFlow;
     const eCommerceFlow = content.ecommerceFlow;
+    const goodbyeKeywords = ["bye", "thanks", "goodbye", "cheers"];
 
-    if (userInput.toLowerCase() === "menu") {
+    if (
+      userInput.toLowerCase() === "menu" ||
+      (conversationState === "awaiting_menu_return" && userInput === "1")
+    ) {
       botResponse = content.mainMenu;
       newConversationState = "main_menu";
       setMentorshipData({});
+    } else if (goodbyeKeywords.includes(userInput.toLowerCase())) {
+      botResponse = content.goodbye;
+      newConversationState = "main_menu";
     } else {
       switch (conversationState) {
         case "main_menu":
@@ -205,7 +238,9 @@ export default function ChatInterface() {
               break;
             case "4":
               botResponse = content.plugsLink;
-              newConversationState = "main_menu";
+              addBotMessage(botResponse);
+              botResponse = content.backToMenu;
+              newConversationState = "awaiting_menu_return";
               break;
             case "5":
               botResponse = content.urgentQueries.menu;
@@ -237,18 +272,21 @@ export default function ChatInterface() {
             if (!response.ok) throw new Error("API request failed");
             const data = await response.json();
             botResponse = data.answer;
+            addBotMessage(botResponse);
+            botResponse = content.backToMenu;
+            newConversationState = "awaiting_menu_return";
           } catch (error) {
             botResponse = content.askMeAnything.error;
+            newConversationState = "main_menu";
           }
-          newConversationState = "main_menu";
           break;
 
         case "ecommerce_step1_choice":
-          if (userInput === "1" || userInput === "2") {
-            botResponse = eCommerceFlow.step2_vip_prompt;
-            newConversationState = "ecommerce_step2_capture";
-          } else if (userInput === "3") {
-            botResponse = eCommerceFlow.step2_gift_prompt;
+          if (userInput === "1" || userInput === "2" || userInput === "3") {
+            botResponse =
+              userInput === "3"
+                ? eCommerceFlow.step2_gift_prompt
+                : eCommerceFlow.step2_vip_prompt;
             newConversationState = "ecommerce_step2_capture";
           } else {
             botResponse = content.fallback;
@@ -260,7 +298,9 @@ export default function ChatInterface() {
           botResponse = eCommerceFlow.step3_confirmation(name);
           addBotMessage(botResponse);
           botResponse = eCommerceFlow.step3_storeLink;
-          newConversationState = "main_menu";
+          addBotMessage(botResponse);
+          botResponse = content.backToMenu;
+          newConversationState = "awaiting_menu_return";
           break;
 
         case "mentorship_step1_start":
@@ -286,8 +326,8 @@ export default function ChatInterface() {
             if (userInput === "1" || userInput === "2") {
               const flowType = userInput === "1" ? "idea" : "existing";
               botResponse =
-                mentorshipFlow[`step3_${flowType}_askIdea`] ||
-                mentorshipFlow[`step3_${flowType}_askName`];
+                mentorshipFlow[`step3_${flowType}_askName`] ||
+                mentorshipFlow[`step3_${flowType}_askIdea`];
               newConversationState = `mentorship_step3_${flowType}_details`;
             } else {
               botResponse = mentorshipFlow.step4_askChallenge;
@@ -365,7 +405,9 @@ export default function ChatInterface() {
 
         case "awaiting_urgent_query_choice":
           botResponse = content.urgentQueries.placeholder;
-          newConversationState = "main_menu";
+          addBotMessage(botResponse);
+          botResponse = content.backToMenu;
+          newConversationState = "awaiting_menu_return";
           break;
 
         default:
@@ -445,7 +487,7 @@ export default function ChatInterface() {
     }
     return (
       <p className="text-sm whitespace-pre-wrap text-gray-800">
-        {String(content)}
+        <Linkify>{String(content)}</Linkify>
       </p>
     );
   };
@@ -495,17 +537,17 @@ export default function ChatInterface() {
                 <div className="flex-grow pr-12">
                   {renderMessageContent(message)}
                 </div>
-                {message.sender === "user" && (
-                  <div className="absolute bottom-1 right-1.5 flex items-center space-x-1">
-                    <span className="text-[10px] text-gray-500/70">
-                      {message.timestamp.toLocaleTimeString("en-US", {
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
-                    </span>
+                <div className="absolute bottom-1 right-1.5 flex items-center space-x-1">
+                  <span className="text-[10px] text-gray-500/70">
+                    {message.timestamp.toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                  {message.sender === "user" && (
                     <MessageStatus status={message.status} />
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </React.Fragment>
           );
