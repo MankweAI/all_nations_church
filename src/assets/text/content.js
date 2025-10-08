@@ -114,7 +114,7 @@ export const content = {
     step1_welcome: {
       isMenu: true,
       welcome:
-        "Great! Our store has some fantastic custom items. What are you interested in?",
+        "Great! What are you interested in?",
       items: [
         { id: 1, emoji: "1. 🍷", title: "Wine" },
         { id: 2, emoji: "2. 🍸", title: "Gin & Vodka" },
@@ -134,7 +134,7 @@ export const content = {
     prompt: {
       isMenu: true,
       welcome:
-        "I'm connected to the Coach BX knowledge base. Please select a topic or type your own question below.",
+        "Please select a topic or type your own question below.",
       items: [
         { id: 1, title: "Kasi Businesses to start today" },
         { id: 2, title: "White-Labelling Products (Health, Beauty, etc.)" },

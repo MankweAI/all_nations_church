@@ -504,7 +504,7 @@ export default function ChatInterface() {
           />
         </div>
         <div className="flex-grow">
-          <h1 className="font-semibold">Coach BX</h1>
+          <h1 className="font-semibold">It&apos;s BX</h1>
           <p className="text-xs text-gray-200">online</p>
         </div>
         <div className="flex items-center space-x-4 text-white">
