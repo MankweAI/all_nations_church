@@ -28,7 +28,7 @@ export const content = {
         id: 4,
         emoji: "4. 🔌",
         title: "All the plugs",
-        description: "(Business tips from the coach)",
+        description: "",
       },
       {
         id: 5,
@@ -49,7 +49,7 @@ export const content = {
       ],
     },
     step1_priceInfo:
-      "The investment for a 60-minute power session is R1500. This includes a recording of the call and a summary of your key action steps.",
+      "The investment for a 60-minute power session is R400.00. This includes a recording of the call and a summary of your key action steps.",
     step2_triage: {
       isMenu: true,
       welcome: "First, which of these best describes your current stage?",
@@ -78,8 +78,9 @@ export const content = {
       "Got it. And where are you based? (e.g., Sandton, Gauteng)",
     step3_idea_askCompetitors:
       "Have you identified any potential competitors yet? If so, who are they?",
-    step3_existing_askName:
-      "Excellent. What is your business name and website/social media link?",
+    step3_existing_askName: "Excellent. What is your business name?",
+    step3_existing_askLinks:
+      "Thanks! Please share your website and/or main social media handle (e.g., @yourbrand on Instagram).",
     step3_existing_askLocation:
       "And where is your business primarily located? (e.g., A specific shop in Durban, services across Gauteng, or online nationwide)",
     step3_existing_askCompetitors: "Who are your 1-2 main local competitors?",
@@ -98,9 +99,16 @@ export const content = {
     step5_askGoal:
       "Perfect. And to make this the most valuable hour for you, what would a 'perfect' outcome from this session look like?",
     step6_summary: (data) =>
-      `Fantastic, thank you. Here is a summary of your details:\n\n*Business Stage:* ${data.stage}\n*Details:* ${data.details}\n*Location:* ${data.location}\n*Competitors:* ${data.competitors}\n*Challenge:* ${data.challenge}\n*Goal:* ${data.goal}\n\nIf that all looks correct, you can go ahead and book your session below!`,
-    step6_handOff:
-      "➡️ Secure Your Session & Book Now ⬅️\n(This would link to a booking page)",
+      `Fantastic, thank you. Here is a summary of your details:\n\n*Business Stage:* ${
+        data.stage
+      }\n*Business Name:* ${data.name || "N/A"}\n*Links:* ${
+        data.links || "N/A"
+      }\n*Location:* ${data.location}\n*Competitors:* ${
+        data.competitors
+      }\n*Challenge:* ${data.challenge}\n*Goal:* ${
+        data.goal
+      }\n\nIf that all looks correct, you can go ahead and book your session below!`,
+    step6_handOff: "➡️ Secure Your Session & Book Now ⬅️\n(Payment gateway)",
   },
   ecommerceFlow: {
     step1_welcome: {
@@ -114,9 +122,9 @@ export const content = {
       ],
     },
     step2_vip_prompt:
-      "Excellent choice! To add you to our VIP list for exclusive offers, what is your name and email address?",
+      "Excellent choice! Please give us your name and cellphone number so that we can hear your experience with us.",
     step2_gift_prompt:
-      "Perfect for bespoke branding or bulk orders. So our team can get in touch, what is your name and email address?",
+      "Perfect for bespoke branding or bulk orders. So our team can get in touch, what is your name and cellphone number?",
     step3_confirmation: (name) =>
       `Thank you, ${name}! We've got your details. You can visit our online store right now by clicking the link below.`,
     step3_storeLink:
@@ -128,7 +136,7 @@ export const content = {
       welcome:
         "I'm connected to the Coach BX knowledge base. Please select a topic or type your own question below.",
       items: [
-        { id: 1, title: "Kasi Businesses Today" },
+        { id: 1, title: "Kasi Businesses to start today" },
         { id: 2, title: "White-Labelling Products (Health, Beauty, etc.)" },
         { id: 3, title: "The Vending Machine Business" },
         { id: 4, title: "Starting a Wi-Fi Reseller Business" },
@@ -157,8 +165,7 @@ export const content = {
         { id: 4, title: "My issue is something else" },
       ],
     },
-    placeholder:
-      "Thank you for reaching out through the Urgent Queries channel. Please note, this automated feature is still under development for our MVP launch and is not yet active. For any truly urgent matters, please send a detailed email directly to support@coachbx.co.za. For all other inquiries, please type 'menu'.",
+    placeholder: "This feature under construction",
   },
   goodbye: "You're welcome! Feel free to reach out anytime. Cheers!",
   backToMenu: {
